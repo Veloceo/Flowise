@@ -19,6 +19,7 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 ENV NODE_OPTIONS=--max-old-space-size=8192
+ENV PORT=80
 
 WORKDIR /usr/src
 
@@ -29,6 +30,6 @@ RUN pnpm install
 
 RUN pnpm build
 
-EXPOSE 3000
+EXPOSE 80
 
-CMD [ "pnpm", "start" ]
+CMD [ "pnpm", "start"]
