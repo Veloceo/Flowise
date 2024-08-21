@@ -1,0 +1,12 @@
+services:
+  flowise-local:
+    container_name: flowise-local
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ~/.flowise:/root/.flowise
