@@ -7,6 +7,6 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "3005:80"
     volumes:
       - ~/.flowise:/root/.flowise
