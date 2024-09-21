@@ -41,7 +41,7 @@ jobs:
           echo "ECS_SERVICE=hiremii-backend-uat-service" >> $GITHUB_ENV
           echo "IMAGE_TAG=uat-latest" >> $GITHUB_ENV
         elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-          echo "ECS_SERVICE=veloceoai-flowise-dev-service" >> $GITHUB_ENV
+          echo "ECS_SERVICE=orchestrait-dev-flowise-service" >> $GITHUB_ENV
           echo "IMAGE_TAG=dev-latest" >> $GITHUB_ENV
         fi
  
