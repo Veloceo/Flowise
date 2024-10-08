@@ -26,9 +26,10 @@ WORKDIR /usr/src
 # Copy app source
 COPY . .
 
-RUN pnpm add mssql
+RUN pnpm install mssql
 
 RUN pnpm install
+
 
 RUN pnpm build
 
