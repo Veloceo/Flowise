@@ -78,6 +78,7 @@
         "mysql2": "^3.9.2",
         "openai": "^4.51.0",
         "pg": "^8.11.1",
+        "mssql": "^11.0.1",
         "posthog-node": "^3.5.0",
         "reflect-metadata": "^0.1.13",
         "sanitize-html": "^2.11.0",
