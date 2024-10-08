@@ -26,6 +26,9 @@ WORKDIR /usr/src
 # Copy app source
 COPY . .
 
+RUN npm install -g mssql
+
+
 RUN pnpm install
 
 
