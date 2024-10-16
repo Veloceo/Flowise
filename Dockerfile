@@ -5,7 +5,7 @@
 # docker run -d -p 3000:3000 flowise
 
 FROM node:20-alpine
-RUN apk add --update libc6-compat python3 make g++
+RUN apk add --update libc6-compat python3 make g++ git
 # needed for pdfjs-dist
 RUN apk add --no-cache build-base cairo-dev pango-dev
 
@@ -26,8 +26,7 @@ WORKDIR /usr/src
 # Copy app source
 COPY . .
 
-RUN npm install -g mssql
-
+RUN pnpm install mssql -w --save
 
 RUN pnpm install
 

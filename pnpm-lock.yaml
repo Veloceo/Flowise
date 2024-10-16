@@ -14789,7 +14789,7 @@ packages:
             mongodb:
                 optional: true
             mssql:
-                optional: true
+                optional: false
             mysql2:
                 optional: true
             oracledb:
