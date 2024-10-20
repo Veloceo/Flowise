@@ -10,7 +10,7 @@ RUN apk add --update libc6-compat python3 make g++
 RUN apk add --no-cache build-base cairo-dev pango-dev git
 
 # Install Chromium
-RUN apk add --no-cache chromium openssh
+RUN apk add --no-cache chromium openssh openvpn
 
 #install PNPM globaly
 RUN npm install -g pnpm
