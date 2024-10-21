@@ -5,12 +5,12 @@
 # docker run -d -p 3000:3000 flowise
 
 FROM node:20-alpine
-RUN apk add --update libc6-compat python3 make g++ git
+RUN apk add --update libc6-compat python3 make g++
 # needed for pdfjs-dist
-RUN apk add --no-cache build-base cairo-dev pango-dev
+RUN apk add --no-cache build-base cairo-dev pango-dev git
 
 # Install Chromium
-RUN apk add --no-cache chromium
+RUN apk add --no-cache chromium openssh openvpn
 
 #install PNPM globaly
 RUN npm install -g pnpm
@@ -18,13 +18,14 @@ RUN npm install -g pnpm
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-ENV NODE_OPTIONS=--max-old-space-size=8192
+ENV NODE_OPTIONS="--max-old-space-size=8192"
 ENV PORT=80
 
 WORKDIR /usr/src
 
 # Copy app source
-COPY . .
+
+COPY --chmod=777 . .
 
 RUN pnpm install mssql -w --save
 
@@ -32,7 +33,8 @@ RUN pnpm install
 
 
 RUN pnpm build
+RUN chmod +x /usr/src/docker-entrypoint.sh
 
 EXPOSE 80
 
-CMD [ "pnpm", "start"]
+ENTRYPOINT ["/usr/src/docker-entrypoint.sh"]

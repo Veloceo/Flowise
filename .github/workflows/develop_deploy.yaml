@@ -1,9 +1,10 @@
-name: Deploy Flowise to DEV
+name: Deploy Flowise to AWS
  
 on:
   push:
     branches:
       - develop
+      - prod
       # - uat
  
 env:
@@ -33,9 +34,9 @@ jobs:
     - name: Set environment variables
       id: set-env
       run: |
-        if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-          echo "ECS_SERVICE=hiremiiai" >> $GITHUB_ENV
-          echo "ECS_TASK_DEFINITION=your-prod-ecs-task-definition" >> $GITHUB_ENV
+        if [ "${{ github.ref }}" == "refs/heads/prod" ]; then
+          echo "ECS_SERVICE=orchestrait-prod-flowise-service" >> $GITHUB_ENV
+          echo "ECS_TASK_DEFINITION=orchestrait-flowise-prod" >> $GITHUB_ENV
           echo "IMAGE_TAG=prod-latest" >> $GITHUB_ENV
         elif [ "${{ github.ref }}" == "refs/heads/uat" ]; then
           echo "ECS_SERVICE=hiremii-backend-uat-service" >> $GITHUB_ENV
@@ -54,7 +55,7 @@ jobs:
  
     - name: Download task definition
       run: |
-        aws ecs describe-task-definition --task-definition veloceoai-flowise-dev --query taskDefinition > task-definition.json
+        aws ecs describe-task-definition --task-definition orchestrait-flowise-prod --query taskDefinition > task-definition.json
  
     - name: Deploy to Amazon ECS
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
