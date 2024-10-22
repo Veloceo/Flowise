@@ -22,6 +22,8 @@ import flowiseApiV1Router from './routes'
 import errorHandlerMiddleware from './middlewares/errors'
 import { SSEStreamer } from './utils/SSEStreamer'
 import { validateAPIKey } from './utils/validateKey'
+import cluster from 'cluster'
+import os from 'os'
 
 declare global {
     namespace Express {
@@ -251,22 +253,36 @@ export async function getAllChatFlow(): Promise<IChatFlow[]> {
 }
 
 export async function start(): Promise<void> {
-    serverApp = new App()
+    if (cluster.isMaster) {
+        const numCPUs = os.cpus().length
+        logger.info(`Master ${process.pid} is running`)
 
-    const host = process.env.HOST
-    const port = parseInt(process.env.PORT || '', 10) || 3000
-    const server = http.createServer(serverApp.app)
+        // Fork workers.
+        for (let i = 0; i < numCPUs; i++) {
+            cluster.fork()
+        }
 
-    const io = new Server(server, {
-        cors: getCorsOptions()
-    })
+        cluster.on('exit', (worker, code, signal) => {
+            logger.info(`worker ${worker.process.pid} died`)
+        })
+    } else {
+        serverApp = new App()
 
-    await serverApp.initDatabase()
-    await serverApp.config(io)
+        const host = process.env.HOST
+        const port = parseInt(process.env.PORT || '', 10) || 3000
+        const server = http.createServer(serverApp.app)
 
-    server.listen(port, host, () => {
-        logger.info(`⚡️ [server]: Flowise Server is listening at ${host ? 'http://' + host : ''}:${port}`)
-    })
+        const io = new Server(server, {
+            cors: getCorsOptions()
+        })
+
+        await serverApp.initDatabase()
+        await serverApp.config(io)
+
+        server.listen(port, host, () => {
+            logger.info(`⚡️ [server]: Flowise Server is listening at ${host ? 'http://' + host : ''}:${port}`)
+        })
+    }
 }
 
 export function getInstance(): App | undefined {
